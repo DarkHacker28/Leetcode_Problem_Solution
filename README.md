@@ -1,2 +1,6 @@
-# leetcode-problem
-More harder it get's
+# Leetcode_Daily_Problems
+
+More harder it get's 
+
+Problems Name :
+1.
