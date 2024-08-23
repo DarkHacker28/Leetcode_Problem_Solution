@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+class Solution {
+public:
+    string fractionAddition(string a) {
+        vector<int> b; 
+        vector<int> c;
+        if (a[0] != '+' && a[0] != '-') {
+            a = "+" + a;
+        }
+        int d = 0;      
+        int e = a.size();
+
+        while (d < e) {
+            char sign = a[d];
+            int f = (sign == '-') ? -1 : 1;
+            d++; 
+            int g = 0;
+            while (d < e && isdigit(a[d])) {
+                g = g * 10 + (a[d] - '0');
+                d++;
+            }
+            g *= f; 
+            d++; 
+            int h = 0;
+            while (d < e && isdigit(a[d])) {
+                h = h * 10 + (a[d] - '0');
+                d++;
+            }
+            b.push_back(g); 
+            c.push_back(h); 
+        }
+        int i_lcd = 1;
+        for (int den : c) {
+            i_lcd = lcm(i_lcd, den);
+        }
+        int j_sum = 0;
+        for (int m = 0; m < b.size(); m++) {
+            j_sum += b[m] * (i_lcd / c[m]);
+        }
+        int k_gcd = gcd(abs(j_sum), i_lcd);
+        j_sum /= k_gcd;
+        i_lcd /= k_gcd;
+        return to_string(j_sum) + "/" + to_string(i_lcd);
+    }
+    int gcd(int l, int m) {
+        while (m != 0) {
+            int n = m;
+            m = l % m;
+            l = n;
+        }
+        return l;
+    }
+    int lcm(int l, int m) {
+        return l / gcd(l, m) * m;
+    }
+};
