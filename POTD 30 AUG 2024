@@ -1,0 +1,65 @@
+class Solution {
+public:
+    vector<vector<int>> modifiedGraphEdges(int n, vector<vector<int>>& e, int s, int d, int t) {
+        vector<vector<pair<int, int>>> adj(n);
+        for (int i = 0; i < e.size(); i++) {
+            int a = e[i][0], b = e[i][1];
+            adj[a].emplace_back(b, i);
+            adj[b].emplace_back(a, i);
+        }
+
+        vector<vector<int>> dist(n, vector<int>(2, INT_MAX));
+        dist[s][0] = dist[s][1] = 0;
+
+        runDijkstra(adj, e, dist, s, 0, 0);
+        int diff = t - dist[d][0];
+        if (diff < 0) return {};
+        runDijkstra(adj, e, dist, s, diff, 1);
+        if (dist[d][1] < t) return {};
+
+        for (auto& x : e) {
+            if (x[2] == -1) x[2] = 1;
+        }
+        return e;
+    }
+
+private:
+    void runDijkstra(const vector<vector<pair<int, int>>>& adj, vector<vector<int>>& e, vector<vector<int>>& dist, int s, int diff, int run) {
+        int n = adj.size();
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        pq.push({0, s});
+        dist[s][run] = 0;
+
+        while (!pq.empty()) {
+            auto [curDist, u] = pq.top();
+            pq.pop();
+
+            if (curDist > dist[u][run]) continue;
+
+            for (auto& [v, idx] : adj[u]) {
+                int w = e[idx][2];
+
+                if (w == -1) w = 1;
+
+                if (run == 1 && e[idx][2] == -1) {
+                    int newW = diff + dist[v][0] - dist[u][1];
+                    if (newW > w) {
+                        e[idx][2] = w = newW;
+                    }
+                }
+
+                if (dist[v][run] > dist[u][run] + w) {
+                    dist[v][run] = dist[u][run] + w;
+                    pq.push({dist[v][run], v});
+                }
+            }
+        }
+    }
+};
+
+static const auto mynameisbarryallen = []() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
+    return 0;
+}();
