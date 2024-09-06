@@ -1,0 +1,53 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+// Definition for singly-linked list.
+
+
+class Solution {
+public:
+    ListNode* modifiedList(vector<int>& nums, ListNode* head) {
+        // Convert nums to a set for efficient look-up
+        unordered_set<int> toRemove(nums.begin(), nums.end());
+
+        // Dummy node to handle edge cases such as removing the head node
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* prev = dummy;
+        ListNode* current = head;
+
+        while (current != nullptr) {
+            if (toRemove.find(current->val) != toRemove.end()) {
+                // Remove the node
+                prev->next = current->next;
+            } else {
+                // Move the previous pointer
+                prev = current;
+            }
+            // Move the current pointer
+            current = current->next;
+        }
+
+        // The new head might be different if the original head was removed
+        ListNode* newHead = dummy->next;
+        delete dummy;
+        return newHead;
+    }
+};
+
+// Helper function to print the linked list
+void printList(ListNode* head) {
+    ListNode* current = head;
+    while (current != nullptr) {
+        cout << current->val << " ";
+        current = current->next;
+    }
+    cout << endl;
+}
