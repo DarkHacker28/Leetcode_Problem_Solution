@@ -1,0 +1,58 @@
+struct TrieNode {
+    int isCount; 
+    TrieNode* child[26]; 
+    TrieNode() {
+        isCount = 0;
+        for (int i = 0; i < 26; i++) {
+            child[i] = NULL;
+        }
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+public:
+    Trie() {
+        root = new TrieNode(); 
+    }
+    void Insert(string s) {
+        TrieNode* crawl = root;
+        for (auto ch : s) {
+            int idx = ch - 'a';
+            if (!crawl->child[idx]) {
+                crawl->child[idx] = new TrieNode(); 
+            }
+            crawl = crawl->child[idx];
+            crawl->isCount++; 
+        }
+    }
+    vector<int> solve(vector<string>& words) {
+        vector<int> result;
+        for (auto word : words) {
+            int count = 0;
+            TrieNode* crawl = root;
+            for (auto ch : word) {
+                int idx = ch - 'a';
+                if (!crawl->child[idx]) {
+                    break; 
+                }
+                crawl = crawl->child[idx];
+                count += crawl->isCount; 
+            }
+            result.push_back(count);
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    vector<int> sumPrefixScores(vector<string>& words) {
+        Trie t;
+        for (auto word : words) {
+            t.Insert(word); 
+        }
+        return t.solve(words); 
+    }
+};
