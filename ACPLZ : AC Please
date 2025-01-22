@@ -1,0 +1,15 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+    int temprature;
+    cin >> temprature;
+
+    if(temprature > 30)
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl ; 
+
+    return 0;
+}
